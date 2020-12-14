@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+function usage() {
+  echo ""
+  echo "#get-col"
+  echo "This script helps you printa column with awk by passing column and seperator.
+  Author: Mohammed Griti <newton>
+
+<h2># Options</h2>
+-c specifies column number, 1 is default
+-s specifies the field separator, default is space/tab
+-o specifies the outout file, default is stdout
+-h print this help guide
+
+Ex-usage: echo/cat file | get-col -c 1 -s ':'"
+  # exit();
+}
+
+#check if script is running by root sudo
+# if [ "$EUID" -ne 0 ]
+#   then echo "Please run as root"
+#   exit
+# fi
+col="1"
+sep=""
+
+
+while  getopts c:s:h args ; do
+  case $args in
+    c)
+      col=$OPTARG
+      ;;
+    s)
+      sep=$OPTARG
+      ;;
+    h)
+      usage
+      exit
+      ;;
+    \? ) echo "Unknown option: -$OPTARG" >&2; exit 1;;
+    *)
+      echo "Invalid argument"
+      usage
+      ;;
+  esac
+done
+
+# if [ $OPTIND -eq 1 ]; then
+#   echo "No options were passed";
+#   usage;
+#   exit
+# fi
+if [[ $col == "" ]]; then
+  echo "At least -c must be specified, col number"
+  usage;
+  exit
+else
+    if [[ $sep == "" || $sep == " " ]]; then
+       bash -c "awk '{print $'\"$col\"'}'"
+    else
+        bash -c "awk -F $sep '{print $'\"$col\"'}'"
+    fi
+
+fi
+
+shift $((OPTIND-1))
+#echo "$# non-option arguments"
