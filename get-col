@@ -21,7 +21,7 @@ Ex-usage: echo/cat file | get-col -c 1 -s ':'"
 #   exit
 # fi
 col="1"
-sep=""
+sep=" "
 
 
 while  getopts c:s:h args ; do
@@ -44,31 +44,39 @@ while  getopts c:s:h args ; do
   esac
 done
 
+#shift.remove process paramaters, getonly stdin, remove getops
+shift $((OPTIND -1))
+
 # if [ $OPTIND -eq 1 ]; then
 #   echo "No options were passed";
 #   usage;
 #   exit
 # fi
+command="awk"
+
+if [[ $sep == "" ]]; then
+  echo "At least -s must be specified, field separator"
+  usage;
+  exit   
+fi
+
+if [[ $sep != "" && $sep != " " ]]; then
+  command+=" -F '$sep' "
+fi
+
 if [[ $col == "" ]]; then
   echo "At least -c must be specified, col number"
   usage;
-  exit
+  exit   
 else
-    if [[ $sep == "" || $sep == " " ]]; then
-       command="awk '{print $'\"$col\"'}'"
-    else
-        command="awk -F $sep '{print $'\"$col\"'}'"
-    fi
-
-
+  command+=" '{print $'\"$col\"'}' "
 fi
-#shift process paramaters, getonly stdin, remove getops
-shift $((OPTIND-1))
 
 if (( $#  > 0 )) ; then
-      # echo "NO of args $#"
-       echo "${command} ${@}" | bash
-       
-    else
-        bash -c "$command"
+  # echo $command
+  # exit
+  echo "${command} ${@}" | bash | grep -v -e '^[[:space:]]*$' #remove empty lines after filter
+else
+  bash -c "$command" | grep -v -e '^[[:space:]]*$' #remove empty lines after filter
 fi
+exit
