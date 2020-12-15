@@ -9,7 +9,7 @@ function usage() {
 -c specifies column number, 1 is default
 -s specifies the field separator, default is space/tab
 -o specifies the outout file, default is stdout
--h print this help guide
+-h print this help geecho
 
 Ex-usage: echo/cat file | get-col -c 1 -s ':'"
   # exit();
@@ -55,12 +55,20 @@ if [[ $col == "" ]]; then
   exit
 else
     if [[ $sep == "" || $sep == " " ]]; then
-       bash -c "awk '{print $'\"$col\"'}'"
+       command="awk '{print $'\"$col\"'}'"
     else
-        bash -c "awk -F $sep '{print $'\"$col\"'}'"
+        command="awk -F $sep '{print $'\"$col\"'}'"
     fi
 
-fi
 
+fi
+#shift process paramaters, getonly stdin, remove getops
 shift $((OPTIND-1))
-#echo "$# non-option arguments"
+
+if (( $#  > 0 )) ; then
+      # echo "NO of args $#"
+       echo "${command} ${@}" | bash
+       
+    else
+        bash -c "$command"
+fi
