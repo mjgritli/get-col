@@ -15,13 +15,13 @@ Copy the file to your path and make executable
 
 ### Usage
 Piping
-```
+```bash
 cat file | get-col # first column, space/tab seperated
 cat file | get-col -c 2 # second column, space/tab seperated
 cat file | get-col -c 2 -s ':' # second column, seperated with :
 ```
 Or via stdin
-```
+```bash
 get-col file1 file2 filen
 get-col -c 2 file1 file2 filen
 get-col -c 2 -s ':' file1 file2 filen
