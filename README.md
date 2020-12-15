@@ -1,7 +1,7 @@
 # get-col
 This script helps you print a column with awk by passing column number and field seperator.
 
-#Announcement
+# Announcement
 this repo has been migrated to a newer version, please follow the link below:
 https://github.com/mjgritli/bash-filters
 
